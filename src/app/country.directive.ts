@@ -16,8 +16,7 @@ export class CountryDirective {
   constructor(element: ElementRef, private service: CountryService) {
     this.nativeEltAttrs = element.nativeElement.attributes;
     service.state$.asObservable().pipe(
-      map(countries => countries[element.nativeElement.attributes.id.value]),
-      filter(value => (value))
+      map(countries => countries[this.nativeEltAttrs.id.value] || 'neverBeen'),
     ).subscribe(state => this.class = state);
   }
 

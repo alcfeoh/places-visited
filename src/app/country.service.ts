@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Subject} from 'rxjs';
+import {ReplaySubject, Subject} from 'rxjs';
 import {Country, VisitState} from './country';
 
 @Injectable({
@@ -8,8 +8,13 @@ import {Country, VisitState} from './country';
 export class CountryService {
 
   selectedCountry$ = new Subject<Country>();
-  countries: VisitState[] = [];
-  state$ = new Subject<VisitState[]>();
+  countries = {};
+  state$ = new ReplaySubject(1);
+
+  constructor() {
+    this.countries = JSON.parse(localStorage.getItem('visitedCountries')) || {};
+    this.state$.next(this.countries);
+  }
 
   countryClicked(country: Country) {
     this.selectedCountry$.next(country);
@@ -18,6 +23,7 @@ export class CountryService {
   changeCountryState(country: Country, state: VisitState) {
     this.countries[country.id] = state;
     console.log('New state:', this.countries);
+    localStorage.setItem('visitedCountries', JSON.stringify(this.countries));
     this.state$.next(this.countries);
   }
 }
