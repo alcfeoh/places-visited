@@ -1,0 +1,20 @@
+<div class="modal" [class.is-active]="opened">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">{{country?.name}}</p>
+        <button class="delete" aria-label="close" (click)="done()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="buttons has-addons is-centered" style="overflow: hidden">
+          <button class="button is-success" (click)="done('lived')">I've lived there</button>
+          <button class="button is-info" (click)="done('visited')">I've visited</button>
+          <button class="button is-danger" (click)="done('neverBeen')">Never been</button>
+        </div>
+      </section>
+    </div>
+
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="done()">Close</button>
+</div>

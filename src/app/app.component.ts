@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {CountryService} from './country.service';
+import {Country} from './country';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'places-visited';
+
+  selectedCountry: Country;
+
+  constructor(countryService: CountryService) {
+    countryService.selectedCountry$.asObservable().subscribe(country => this.selectedCountry = country);
+  }
 }
