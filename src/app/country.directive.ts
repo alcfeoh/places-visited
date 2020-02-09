@@ -1,5 +1,7 @@
 import {Directive, ElementRef, HostBinding, HostListener} from '@angular/core';
 import {CountryService} from './country.service';
+import {filter, map} from 'rxjs/operators';
+import {VisitState} from './country';
 
 @Directive({
   selector: 'path'
@@ -7,14 +9,20 @@ import {CountryService} from './country.service';
 export class CountryDirective {
 
   @HostBinding('class')
-  fill = 'not-visited';
+  class: VisitState = 'neverBeen';
 
-  constructor(private element: ElementRef, private service: CountryService) {}
+  nativeEltAttrs;
+
+  constructor(element: ElementRef, private service: CountryService) {
+    this.nativeEltAttrs = element.nativeElement.attributes;
+    service.state$.asObservable().pipe(
+      map(countries => countries[element.nativeElement.attributes.id.value]),
+      filter(value => (value))
+    ).subscribe(state => this.class = state);
+  }
 
   @HostListener('click')
   clicked() {
-    const nativeEltAttrs = this.element.nativeElement.attributes;
-    this.service.countryClicked({id: nativeEltAttrs.id, name: nativeEltAttrs['data-name'].value});
-    this.fill = 'visited';
+    this.service.countryClicked({id: this.nativeEltAttrs.id.value, name: this.nativeEltAttrs['data-name'].value});
   }
 }
