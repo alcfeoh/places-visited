@@ -21,7 +21,11 @@ export class CountryService {
   }
 
   changeCountryState(country: Country, state: VisitState) {
-    this.countries[country.id] = state;
+    if (state === 'neverBeen') {
+      delete this.countries[country.id];
+    } else {
+      this.countries[country.id] = state;
+    }
     console.log('New state:', this.countries);
     localStorage.setItem('visitedCountries', JSON.stringify(this.countries));
     this.state$.next(this.countries);
